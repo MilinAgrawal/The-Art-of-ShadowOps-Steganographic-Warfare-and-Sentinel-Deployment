@@ -1,0 +1,138 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Encryption Systems Report}
+\author{Milin Agrawal}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{RSA Encryption System}
+
+\subsection{Algorithm Description}
+RSA (Rivest–Shamir–Adleman) encryption is a widely used public-key encryption algorithm.
+\begin{itemize}
+    \item \textbf{Key Generation}:
+    \begin{enumerate}
+        \item Choose two large prime numbers \( p \) and \( q \).
+        \item Calculate the modulus \( n = p \times q \).
+        \item Compute Euler's totient function \( \phi(n) = (p-1)(q-1) \).
+        \item Choose public exponent \( e \) such that \( 1 < e < \phi(n) \) and \( \gcd(e, \phi(n)) = 1 \).
+        \item Compute a private exponent \( d \) such that \( d \equiv e^{-1} \mod \phi(n) \).
+    \end{enumerate}
+    
+    \item \textbf{Encryption}:
+    \begin{itemize}
+        \item Given public key \( (e, n) \) and plaintext \( M \):
+        \[
+        C = M^e \mod n
+        \]
+    \end{itemize}
+    
+    \item \textbf{Decryption}:
+    \begin{itemize}
+        \item Given private key \( (d, n) \) and ciphertext \( C \):
+        \[
+        M = C^d \mod n
+        \]
+    \end{itemize}
+    
+    \item \textbf{Security Features}:
+    RSA is secure due to the difficulty of factoring large composite numbers into their prime factors, which is crucial for breaking RSA encryption.
+\end{itemize}
+
+\subsection{Key Generation Code}
+\begin{algorithm}
+\caption{RSA Key Generation}
+\begin{algorithmic}[1]
+\Procedure{Generate RSA Keys} {$\text{bit\_length}$}
+    \State Choose two large prime numbers $p$ and $q$ with $\text{bit\_length}/2$ bits each
+    \State Compute modulus $n = p \times q$
+    \State Compute Euler's totient function $\phi(n) = (p-1)(q-1)$
+    \State Choose public exponent $e$ such that $1 < e < \phi(n)$ and $\gcd(e, \phi(n)) = 1$
+    \State Compute private exponent $d$ such that $d \equiv e^{-1} \mod \phi(n)$
+    \State \textbf{return} Public key $(e, n)$, private key $(d, n)$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+\section{Paillier Encryption System}
+
+\subsection{Algorithm Description}
+Paillier encryption is a probabilistic asymmetric encryption scheme based on the difficulty of computing discrete logarithms.
+\begin{itemize}
+    \item \textbf{Key Generation}:
+    \begin{enumerate}
+        \item Choose two large prime numbers \( p \) and \( q \).
+        \item Calculate the modulus \( n = p \times q \).
+        \item Compute Carmichael's function \( \lambda(n) = \text{lcm}(p-1, q-1) \).
+        \item Choose a random integer \( g \) such that \( g \) is in the multiplicative group modulo \( n^2 \).
+        \item Public key is \( (n, g) \) and private key includes \( \lambda(n) \).
+    \end{enumerate}
+    
+    \item \textbf{Encryption}:
+    \begin{itemize}
+        \item Given public key \( (n, g) \) and plaintext \( M \):
+        \[
+        C = g^M \cdot r^n \mod n^2
+        \]
+        where \( r \) is a random integer modulo \( n \).
+    \end{itemize}
+    
+    \item \textbf{Decryption}:
+    \begin{itemize}
+        \item Given private key \( \lambda(n) \) and ciphertext \( C \):
+        \[
+        M = L\left(C^{\lambda(n)} \mod n^2\right) \cdot \mu(n) \mod n
+        \]
+        where \( L(x) = \frac{x - 1}{n} \) and \( \mu(n) \) is the modular inverse of \( L(n) \) modulo \( n \).
+    \end{itemize}
+    
+    \item \textbf{Security Features}:
+    Paillier encryption provides semantic security and homomorphic properties under certain conditions. It relies on the difficulty of factoring the modulus \( n \) and computing discrete logarithms modulo \( n^2 \).
+\end{itemize}
+
+\section{ElGamal Encryption System}
+
+\subsection{Algorithm Description}
+The ElGamal encryption system is based on the Diffie-Hellman key exchange and provides semantic security.
+\begin{itemize}
+    \item \textbf{Key Generation}:
+    \begin{enumerate}
+        \item Choose a large prime number \( p \).
+        \item Select a generator \( g \) of the multiplicative group modulo \( p \).
+        \item Choose a random integer \( x \) such that \( 1 < x < p-1 \).
+        \item Compute public key \( y = g^x \mod p \).
+    \end{enumerate}
+    
+    \item \textbf{Encryption}:
+    \begin{itemize}
+        \item Given public key \( (g, y, p) \) and plaintext \( M \):
+        \begin{enumerate}
+            \item Choose a random integer \( k \) such that \( 1 < k < p-1 \).
+            \item Compute \( a = g^k \mod p \).
+            \item Compute \( b = M \cdot y^k \mod p \).
+            \item The ciphertext is \( (a, b) \).
+        \end{enumerate}
+    \end{itemize}
+    
+    \item \textbf{Decryption}:
+    \begin{itemize}
+        \item Given private key \( x \) and ciphertext \( (a, b) \):
+        \begin{enumerate}
+            \item Compute \( s = a^x \mod p \).
+            \item Compute \( M = b \cdot s^{-1} \mod p \), where \( s^{-1} \) is the modular inverse of \( s \) modulo \( p \).
+        \end{enumerate}
+    \end{itemize}
+    
+    \item \textbf{Security Features}:
+    ElGamal encryption relies on the difficulty of computing discrete logarithms in the multiplicative group modulo \( p \).
+\end{itemize}
+
+\end{document}
